@@ -1,0 +1,31 @@
+Mettre des private final partout pour les attributs????
+
+
+
+
+this.blasts.forEach(cell -> blastedCells.add(cell.head()));
+
+==   je fais ça que dans méthode très courte simple utilisant qu'1 for
+
+for (Sq<Cell> cell : blasts) {
+            blastedCells.add(cell.head());
+        }
+
+
+
+======> for (Character character : queue) {
+            b.append(character);
+        }
+        
+      = queue.forEach(character -> b.append(character));
+      
+      = queue.forEach(b::append);
+      
+      
+       switch soit return soit break apres case
+       
+       
+       Debugger temps
+       Faire des exceptions mieux
+       Depuis le client, faire une channel qui envoie le numéro de notre 
+       commande de direction au serveur 

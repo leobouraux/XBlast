@@ -1,0 +1,73 @@
+
+public final class RunLengthEncoder {
+    private RunLengthEncoder() {
+    }
+
+    /**
+     * Takes a list of bytes and returns the compressed, encoded version of it
+     * @param bytes
+     *          the original list
+     * @throws IllegalArgumentException
+     *          if the list contains a negative value
+     * @return the encoded list
+     */
+    public static List<Byte> encode(List<Byte> bytes) {
+        List<Byte> encoded = new ArrayList<>();
+        Iterator<Byte> iterator = bytes.iterator();
+        for (Byte b : bytes) {
+            if (b < 0)
+                throw new IllegalArgumentException();
+        }
+        Byte firstByte = iterator.next();
+        
+        while (iterator.hasNext()) {
+            int count = 1;
+            byte next = firstByte;
+            while (iterator.hasNext() && firstByte.equals(next = iterator.next()) && count < 130) {
+                ++count;
+                
+            }
+            
+            if (count <= 2) {
+                encoded.addAll(Collections.nCopies(count, firstByte));
+            } else {
+                encoded.add((byte) (2 - count));
+                encoded.add(firstByte);
+            }
+            boolean finalByteCorrection = (count == 130 && firstByte.equals(next) && !iterator.hasNext());
+            if ((!iterator.hasNext() && !firstByte.equals(next)) || finalByteCorrection) {
+                encoded.add(next);
+            }
+            firstByte = next;
+        }
+        return encoded;
+    }
+
+    /**
+     * Takes an encoded list of bytes and returns the decompressed version of the list
+     * @param encoded
+     *          the encoded list
+     * @throws IllegalArgumentException
+     *          if the final element of encoded is negative
+     * @return the decoded list
+     * 
+     */
+    public static List<Byte> decode(List<Byte> encoded) {
+        if (encoded.get(encoded.size() - 1) < 0)
+            throw new IllegalArgumentException();
+        List<Byte> decoded = new ArrayList<>();
+
+        Iterator<Byte> iterator = encoded.iterator();
+        while (iterator.hasNext()) {
+            Byte first = iterator.next();
+            if (first < 0) {
+                decoded.addAll(Collections.nCopies(2 - first, iterator.next()));
+            } else {
+                decoded.add(first);
+            }
+
+        }
+        return decoded;
+    }
+
+}
